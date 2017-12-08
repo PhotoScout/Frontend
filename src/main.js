@@ -3,13 +3,21 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
+import 'vue-awesome/icons'
+import Icon from 'vue-awesome/components/Icon'
+import VueFloatLabel from 'vue-float-label'
 
 Vue.config.productionTip = false
+
+Vue.use(VueFloatLabel)
+Vue.component('icon', Icon)
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   template: '<App/>',
   components: { App }
 })
