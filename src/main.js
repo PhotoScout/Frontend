@@ -7,9 +7,11 @@ import store from './store'
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
 import VueFloatLabel from 'vue-float-label'
+import VueMoment from 'vue-moment'
 
 Vue.config.productionTip = false
 
+Vue.use(VueMoment)
 Vue.use(VueFloatLabel)
 Vue.component('icon', Icon)
 

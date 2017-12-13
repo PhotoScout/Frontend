@@ -46,153 +46,163 @@ var ENTRYPOINT_PHOTO_SEARCH = "/photos/search"
 
 var ENTRYPOINT_WEATHER = "/weather"
 
-function Get(context, entrypoint, success, failure, headers, args) {
-    let url =  URL_ORIGIN + URL_API_VERSION + entrypoint
+function Get(entrypoint, success, failure, headers, args) {
+  let url =  URL_ORIGIN + URL_API_VERSION + entrypoint
 
-    if(args){
-        var argsString = []
-        Object.keys(args).map(function(key, index) {
-            if(args[key] instanceof Array) {
-                argsString.push(key + "=" + args[key].join("+"))
-            }
-            else {
-                argsString.push(key + "=" + args[key])
-            }
-        })
-        url += "?" + argsString.join("&")
-    }
+  if(args){
+    var argsString = []
+    Object.keys(args).map(function(key, index) {
+      if(args[key] instanceof Array) {
+        argsString.push(key + "=" + args[key].join("+"))
+      }
+      else {
+        argsString.push(key + "=" + args[key])
+      }
+    })
+    url += "?" + argsString.join("&")
+  }
 
-    Vue.http.get(url, {
-        headers: headers,
-    }).then(
-        data => { success(data) },
-        response => { failure(response) }
-    )
+  Vue.http.get(url, {
+    headers: headers,
+  }).then(
+    data => { success(data) },
+    response => { failure(response) }
+  )
 }
 
-function Post(context, entrypoint, success, failure, headers, body) {
-    Vue.http.post( URL_ORIGIN + URL_API_VERSION + entrypoint, body, {
-        headers: headers
-    }).then(
-        data => {
-          success(data) },
-        response => { failure(response) }
-    )
+function Post(entrypoint, success, failure, headers, body) {
+  Vue.http.post( URL_ORIGIN + URL_API_VERSION + entrypoint, body, {
+    headers: headers
+  }).then(
+    data => { success(data) },
+    response => { failure(response) }
+  )
 }
 
-function Put(context, entrypoint, success, failure, headers, body) {
-    Vue.http.put( URL_ORIGIN + URL_API_VERSION + entrypoint, body, {
-        headers: headers
-    }).then(
-        data => { success(data) },
-        response => { failure(response) }
-    )
+function Put(entrypoint, success, failure, headers, body) {
+  Vue.http.put( URL_ORIGIN + URL_API_VERSION + entrypoint, body, {
+    headers: headers
+  }).then(
+    data => { success(data) },
+    response => { failure(response) }
+  )
 }
 
-function Patch(context, entrypoint, success, failure, headers, body) {
-    Vue.http.patch( URL_ORIGIN + URL_API_VERSION + entrypoint, body, {
-        headers: headers
-    }).then(
-        data => { success(data) },
-        response => { failure(response) }
-    )
+function Patch(entrypoint, success, failure, headers, body) {
+  Vue.http.patch( URL_ORIGIN + URL_API_VERSION + entrypoint, body, {
+    headers: headers
+  }).then(
+    data => { success(data) },
+    response => { failure(response) }
+  )
 }
 
-function Delete(context, entrypoint, success, failure, headers, body) {
-    Vue.http.delete( URL_ORIGIN + URL_API_VERSION + entrypoint, {
-        headers: headers,
-        body: body
-    }).then(
-        data => { success(data) },
-        response => { failure(response) }
-    )
+function Delete(entrypoint, success, failure, headers, body) {
+  Vue.http.delete( URL_ORIGIN + URL_API_VERSION + entrypoint, {
+    headers: headers,
+    body: body
+  }).then(
+    data => { success(data) },
+    response => { failure(response) }
+  )
 }
 
 export default {
-    // User related api
-    ValidateToken(context, success, failure) {
-        Get(context, ENTRYPOINT_USER_AUTHENTICATION, success, failure, auth.getAuthHeader())
-    },
-    LoginUser(context, creds, success, failure) {
-        Post(context, ENTRYPOINT_USER_AUTHENTICATION, (data) => {
-          let loginInfo = {
-            username: creds.username,
-            token: data.body.token
-          }
-          success(loginInfo)
-        }, (data) => {
-          failure(data.body)
-        }, {
-            "Authorization": "Basic " + btoa(creds.username + ":" + creds.password)
-        })
-    },
-    GetUserInfo(context, success, failure) {
-        Get(context, ENTRYPOINT_USER_INFORMATION, success, failure, auth.getAuthHeader())
-    },
-    UpdateUserInfo(context, success, failure, data) {
-        Patch(context, ENTRYPOINT_USER_INFORMATION, success, failure, auth.getAuthHeader(), data)
-    },
-    Signup(context, success, failure, data) {
-        Post(context, ENTRYPOINT_USER_ADMINISTRATION, success, failure, {}, data)
-    },
+  // User related api
+  ValidateToken(success, failure) {
+    return new Promise((resolve, reject) => Get(
+      ENTRYPOINT_USER_AUTHENTICATION,
+      data => {
+        resolve()
+      }, data => {
+        reject()
+      },
+      auth.getAuthHeader()
+    ))
+  },
+  LoginUser(creds, success, failure) {
+    return new Promise((resolve, reject) => Post(
+      ENTRYPOINT_USER_AUTHENTICATION,
+      data => {
+        let loginInfo = {
+          username: creds.username,
+          token: data.body.token
+        }
+        resolve(loginInfo)
+      }, data => {
+        reject(data.body)
+      }, {
+        "Authorization": "Basic " + btoa(creds.username + ":" + creds.password)
+      })
+    )
+  },
+  GetUserInfo(success, failure) {
+      Get(ENTRYPOINT_USER_INFORMATION, success, failure, auth.getAuthHeader())
+  },
+  UpdateUserInfo(success, failure, data) {
+      Patch(ENTRYPOINT_USER_INFORMATION, success, failure, auth.getAuthHeader(), data)
+  },
+  Signup(success, failure, data) {
+      Post(ENTRYPOINT_USER_ADMINISTRATION, success, failure, {}, data)
+  },
 
-    // User gear related api
-    GetUserGear(context, success, failure) {
-        Get(context, ENTRYPOINT_USER_GEAR, success, failure, auth.getAuthHeader())
-    },
-    AddUserGear(context, success, failure, data) {
-        Post(context, ENTRYPOINT_USER_GEAR, success, failure, auth.getAuthHeader(), data)
-    },
+  // User gear related api
+  GetUserGear(success, failure) {
+      Get(ENTRYPOINT_USER_GEAR, success, failure, auth.getAuthHeader())
+  },
+  AddUserGear(success, failure, data) {
+      Post(ENTRYPOINT_USER_GEAR, success, failure, auth.getAuthHeader(), data)
+  },
 
 
-    // Guide related API
+  // Guide related API
 
-    ListGuides(context, success, failure) {
-        Get(context, ENTRYPOINT_GUIDE_LISTING, success, failure, auth.getAuthHeader())
-    },
+  ListGuides(success, failure) {
+      Get(ENTRYPOINT_GUIDE_LISTING, success, failure, auth.getAuthHeader())
+  },
 
-    CreateGuide(context, success, failure, data) {
-        Post(context, ENTRYPOINT_GUIDE_INTERACTION, success, failure, auth.getAuthHeader(), data)
-    },
+  CreateGuide(success, failure, data) {
+      Post(ENTRYPOINT_GUIDE_INTERACTION, success, failure, auth.getAuthHeader(), data)
+  },
 
-    DeleteGuide(context, success, failure, data) {
-        Delete(context, ENTRYPOINT_GUIDE_INTERACTION, success, failure, auth.getAuthHeader(), data)
-    },
+  DeleteGuide(success, failure, data) {
+      Delete(ENTRYPOINT_GUIDE_INTERACTION, success, failure, auth.getAuthHeader(), data)
+  },
 
-    UpdateGuide(context, success, failure, data) {
-        Patch(context, ENTRYPOINT_GUIDE_INTERACTION, success, failure, auth.getAuthHeader(), data)
-    },
+  UpdateGuide(success, failure, data) {
+      Patch(ENTRYPOINT_GUIDE_INTERACTION, success, failure, auth.getAuthHeader(), data)
+  },
 
-    GetPublicGuides(context, success, failure) {
-        Get(context, ENTRYPOINT_GUIDE_PUBLIC_LISTING, success, failure, {})
-    },
+  GetPublicGuides(success, failure) {
+      Get(ENTRYPOINT_GUIDE_PUBLIC_LISTING, success, failure, {})
+  },
 
-    GetGuidePhoto(context, success, failure, data) {
-        Get(context, ENTRYPOINT_GUIDE_PHOTO_INTERACTION, success, failure, auth.getAuthHeader(), data)
-    },
+  GetGuidePhoto(success, failure, data) {
+      Get(ENTRYPOINT_GUIDE_PHOTO_INTERACTION, success, failure, auth.getAuthHeader(), data)
+  },
 
-    GetGuideInfo(context, success, failure, data) {
-        Get(context, ENTRYPOINT_GUIDE_INTERACTION, success, failure, auth.getAuthHeader(), data)
-    },
+  GetGuideInfo(success, failure, data) {
+      Get(ENTRYPOINT_GUIDE_INTERACTION, success, failure, auth.getAuthHeader(), data)
+  },
 
-    SearchPhoto(context, success, failure, data) {
-        Get(context, ENTRYPOINT_PHOTO_SEARCH, success, failure, auth.getAuthHeader(), data)
-    },
+  SearchPhoto(success, failure, data) {
+      Get(ENTRYPOINT_PHOTO_SEARCH, success, failure, auth.getAuthHeader(), data)
+  },
 
-    GuideNear(context, success, failure, data) {
-        Get(context, ENTRYPOINT_GUIDE_NEAR, success, failure, auth.getAuthHeader(), data)
-    },
+  GuideNear(success, failure, data) {
+      Get(ENTRYPOINT_GUIDE_NEAR, success, failure, auth.getAuthHeader(), data)
+  },
 
-    // Photo related API
-    AddPhoto(context, success, failure, data) {
-        Post(context, ENTRYPOINT_GUIDE_PHOTO_INTERACTION, success, failure, auth.getAuthHeader(), data)
-    },
-    RemovePhoto(context, success, failure, data) {
-        Delete(context, ENTRYPOINT_GUIDE_PHOTO_INTERACTION, success, failure, auth.getAuthHeader(), data)
-    },
+  // Photo related API
+  AddPhoto(success, failure, data) {
+      Post(ENTRYPOINT_GUIDE_PHOTO_INTERACTION, success, failure, auth.getAuthHeader(), data)
+  },
+  RemovePhoto(success, failure, data) {
+      Delete(ENTRYPOINT_GUIDE_PHOTO_INTERACTION, success, failure, auth.getAuthHeader(), data)
+  },
 
-    // Weather related API
-    GetGuideWeather(context, success, failure, data) {
-        Get(context, ENTRYPOINT_WEATHER, success, failure, auth.getAuthHeader(), data)
-    }
+  // Weather related API
+  GetGuideWeather(success, failure, data) {
+      Get(ENTRYPOINT_WEATHER, success, failure, auth.getAuthHeader(), data)
+  }
 }

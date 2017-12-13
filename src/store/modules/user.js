@@ -1,5 +1,6 @@
 import * as types from '../mutation-types'
 import api from '../../api/api'
+import SurveyingMarmot from 'surveying-marmot-api'
 
 const state = {
   isAuthenticated: false,
@@ -16,21 +17,23 @@ const getters = {
 const actions = {
   login ({ commit, state }, credentials) {
     commit(types.LOGIN_REQUEST)
-    return new Promise((resolve, reject) => {
-      api.LoginUser(this, credentials, (data) => {
+
+    const sm = new SurveyingMarmot({url: 'http://127.0.0.1:5000'})
+    return new Promise((resolve, reject) =>
+      sm.RetrieveToken(credentials.username, credentials.password).then(data => {
         commit(types.LOGIN_SUCCESS, {data})
         resolve(data)
-      }, (data) => {
+      }).catch(data => {
         commit(types.LOGIN_FAILURE, {data})
         reject(data)
       })
-    })
+    )
   },
   signup ({commit, state}, credentials) {
     // Not really a request but same effect
     commit(types.LOGIN_REQUEST)
     return new Promise((resolve, reject) => {
-      api.Signup(this, (data) => {
+      api.Signup((data) => {
         commit(types.SIGNUP_SUCCESS, {data})
         resolve(data)
       }, (data) => {
@@ -52,8 +55,8 @@ const mutations = {
   [types.LOGIN_SUCCESS] (state, { data }) {
     state.isAuthenticated = true
     state.isRequesting = false
-    state.username = data.username
-    state.token = data.token
+    state.username = ''
+    state.token = data
   },
 
   [types.LOGIN_FAILURE] (state, { message }) {

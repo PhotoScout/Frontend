@@ -2,6 +2,7 @@
 
 // import {router} from './index'
 import api from './api'
+import store from '../store'
 
 export default {
     user: {
@@ -37,7 +38,7 @@ export default {
 
     // The object to be passed as a header for authenticated requests
     getAuthHeader: function() {
-        var jwt = localStorage.getItem('token')
+        var jwt = store.state.user.token
         return {
             "Authorization": "Basic " + btoa(jwt + ":*")
         }

@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div id="index">
     <div id="hero">
       <div id="title-container">
 

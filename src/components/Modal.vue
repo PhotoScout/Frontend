@@ -47,7 +47,7 @@ export default {
     align-items: center;
 
     .modal-window{
-      background-color: $white;
+      background-color: $background-white;
       width: 100%;
       max-width: 500px;
       margin: 1em;
@@ -66,7 +66,7 @@ export default {
 
   @media only screen and (max-width: 600px) {
     .modal{
-      background-color: $white;
+      background-color: $background-white;
 
       .modal-window{
         max-width: none;
