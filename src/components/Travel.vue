@@ -2,38 +2,40 @@
   <div id="travel">
     <hero title="Plan your next adventure" image="travel.jpg" dark="true" top="-200px"></hero>
 
-    <div id="guideDisplay">
-      <section id="guideWrapper">
-        <p id="guideNumber">{{guides.length}} Guides</p>
-        <create-guide></create-guide>
-        <div id="guideList" v-if="!isRequesting">
-          <router-link :to="{ name: 'Guide', params: { guideName: guide.short_name }}" class="guide" v-for="(guide, index) in guides" v-bind:key="index" >
-            <div class="featuredImage" v-bind:style='{backgroundImage: "url(" + guide.featured_image + ")"}'></div>
-            <div class="info">
-              <h2>{{guide.title}}</h2>
-              <span class="category">Trip</span>
-            </div>
-            <div class="footer">
-              <icon name="clock-o"></icon> {{guide.last_edited | moment('MM/DD')}}
-            </div>
-          </router-link>
-        </div>
-        <p class="loading" v-if="isRequesting"><icon name="spinner" scale="2" pulse></icon></p>
-      </section>
-    </div>
+    <b-container class="bv-example-row">
+      <div id="guideDisplay">
+        <section id="guideWrapper">
+          <router-link :to="{name:'CreateGuide'}" id="newGuide">Create a new guide</router-link>
+          <p id="guideNumber"><strong>{{guides.length}}</strong> Guides</p>
+          <b-row id="guideList" v-if="!isRequesting">
+            <b-col md="3" class="guide" v-for="(guide, index) in guides" v-bind:key="index" >
+              <b-link :to="{ name: 'Guide', params: { guideName: guide.short_name }}" class="spacer">
+                <div class="featuredImage" v-bind:style='{backgroundImage: "url(" + guide.featured_image + ")"}'></div>
+                <div class="info">
+                  <h2>{{guide.title}}</h2>
+                  <span class="category">Trip</span>
+                </div>
+                <div class="footer">
+                  <icon name="clock-o"></icon> {{guide.last_edited | moment('MM/DD')}}
+                </div>
+              </b-link>
+            </b-col>
+          </b-row>
+          <p class="loading" v-if="isRequesting"><icon name="spinner" scale="2" pulse></icon></p>
+        </section>
+      </div>
+    </b-container>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import hero from './Hero'
-import createGuide from './CreateGuide'
 
 export default {
   name: 'travel',
   components: {
-    hero,
-    'create-guide': createGuide
+    hero
   },
   data: () => {
     return {
@@ -57,10 +59,6 @@ export default {
 @import "../style/colors.scss";
 
   #guideDisplay{
-    min-width: 600px;
-    width: 60%;
-    max-width: 1200px;
-    margin: auto;
     display: flex;
     flex-direction: row;
 
@@ -99,6 +97,25 @@ export default {
       .loading {
         text-align: center;
         width: 100%;
+        margin-top: 2em;
+      }
+
+      #newGuide{
+        background-color: white;
+        border-radius: 5px;
+        border: 2px solid $grey-light-2;
+        text-align: center;
+        width: 100%;
+        display: inline-block;
+        margin-bottom: 1em;
+        padding: 1em;
+        color: #333;
+
+        &:hover{
+          background-color: $primary-color-1;
+          border-color: $primary-color-1;
+          color: white;
+        }
       }
 
       #guideNumber{
@@ -107,31 +124,34 @@ export default {
         color: $grey;
         font-size: 0.9em;
         width: 100%;
+
+        strong{
+          color: $primary-color-1;
+        }
       }
 
       #guideList{
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-between;
 
         .guide {
           position: relative;
-          width: 30%;
-          height: 18em;
-          background-color: $white;
           margin: 0;
           margin-bottom: 2em;
           border-radius: 5px;
           overflow: hidden;
           display: flex;
           flex-direction: column;
-          transition: box-shadow 0.5s;
-          color: #333;
-          border: 1px solid $grey-light-2;
 
-          &:hover{
-            border-color: $primary-color-1;
+          .spacer{
+            height: 18em;
+            margin: 0.2em;
+            background-color: $white;
+            transition: box-shadow 0.5s;
+            color: #333;
+            border: 2px solid $grey-light-2;
+
+            &:hover{
+              border-color: $primary-color-1;
+            }
           }
 
           .featuredImage{
@@ -148,6 +168,7 @@ export default {
 
             h2{
               margin: 0;
+              font-size: 1.5em;
             }
             .category{
               font-size: 0.9em;
@@ -172,7 +193,7 @@ export default {
     }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 599px) {
     #guideDisplay{
       flex-direction: column;
       min-width: 0;
@@ -200,6 +221,15 @@ export default {
           }
         }
       }
+    }
+  }
+
+  @media only screen and (min-width: 600px) and (max-width: 1024px) {
+    #guideDisplay{
+      padding: 1em;
+    }
+    #guideDisplay #guideWrapper #guideList .guide{
+      width: 49%;
     }
   }
 </style>

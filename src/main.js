@@ -8,12 +8,18 @@ import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
 import VueFloatLabel from 'vue-float-label'
 import VueMoment from 'vue-moment'
+import BootstrapVue from 'bootstrap-vue'
 
 Vue.config.productionTip = false
 
+Vue.use(BootstrapVue);
 Vue.use(VueMoment)
 Vue.use(VueFloatLabel)
 Vue.component('icon', Icon)
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,5 +1,5 @@
 import * as types from '../mutation-types'
-import SurveyingMarmot from 'surveying-marmot-api'
+import SurveyingMarmot from '../../api/SurveyingMarmotAPI'
 
 const state = {
   isRequesting: false,

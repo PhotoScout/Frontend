@@ -1,6 +1,6 @@
 import * as types from '../mutation-types'
 import api from '../../api/api'
-import SurveyingMarmot from 'surveying-marmot-api'
+import SurveyingMarmot from '../../api/SurveyingMarmotAPI'
 
 const state = {
   isAuthenticated: false,

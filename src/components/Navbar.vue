@@ -1,37 +1,26 @@
 <template>
+
   <div>
-    <div id="navigation-panel">
-      <div>
-        <span class="logo">
-          <h1>
-            <router-link to="/">
-              <strong>S</strong>urveying <strong>M</strong>armot
-            </router-link>
-          </h1>
-        </span>
-        <span v-if="!menuActive" class="responsiveMenu open" @click="menuActive=true"><icon name="bars" scale="2"></icon></span>
-        <span v-if="menuActive" class="responsiveMenu close" @click="menuActive=false"><icon name="times" scale="2"></icon></span>
-        <nav :class="{active:menuActive}" @click="menuActive=false">
-          <ul class="links">
-            <li>
-              <router-link to="/explore">Explore</router-link>
-            </li>
-              <li v-if="isAuthenticated">
-              <router-link to="/travel">Travel</router-link>
-            </li>
-            <li v-if="isAuthenticated">Achievements</li>
-          </ul>
-          <ul class="user">
-            <li v-if="!isAuthenticated" @click="$refs.loginModal.open()">Login</li>
-            <li class="button" v-if="!isAuthenticated" @click="$refs.signupModal.open()">Sign up</li>
-            <li v-if="isAuthenticated">
-              <router-link to="/account">Account</router-link>
-            </li>
-            <li class="button" v-if="isAuthenticated" v-on:click="logout">Log out</li>
-          </ul>
-        </nav>
-      </div>
-    </div>
+    <b-navbar toggleable="md" type="dark" fixed="top" id="nav">
+      <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+
+      <b-navbar-brand to="/">Surveying Marmot</b-navbar-brand>
+      <b-collapse is-nav id="nav_collapse">
+        <b-navbar-nav v-if="isAuthenticated">
+          <b-nav-item to="/travel">Travel</b-nav-item>
+          <b-nav-item to="/explore" disabled>Explore</b-nav-item>
+          <b-nav-item to="/explore" disabled>Achievements</b-nav-item>
+        </b-navbar-nav>
+        <b-navbar-nav class="ml-auto"  v-if="!isAuthenticated">
+          <b-nav-item @click="$refs.loginModal.open()">Login</b-nav-item>
+          <b-nav-item @click="$refs.signupModal.open()">Sign Up</b-nav-item>
+        </b-navbar-nav>
+        <b-navbar-nav class="ml-auto"  v-else>
+          <b-nav-item to="/account">Account</b-nav-item>
+          <b-nav-item @click="logout">Logout</b-nav-item>
+        </b-navbar-nav>
+      </b-collapse>
+    </b-navbar>
 
     <modal ref="loginModal">
       <login></login>
@@ -79,146 +68,7 @@ export default {
 <style scoped lang="scss">
 @import "../style/colors.scss";
 
-  #navigation-panel {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    z-index: 999;
+  #nav{
     background: linear-gradient(to bottom, rgba(0,0,0,0.5) 0%,rgba(0,0,0,0.3) 50%,rgba(0,0,0,0) 100%);
-
-
-    >div{
-      width: 100%;
-      max-width: 1900px;
-      height: 3.5em;
-      margin:  1em auto;
-      padding: 0 1em;
-      display: flex;
-      align-items: center;
-      color: white;
-      justify-content: space-between;
-
-      .logo {
-        font-size: 1.5em;
-        display: flex;
-        align-items: center;
-
-        h1 {
-          font-size: 0.8em;
-          margin: 0;
-          font-weight: normal;
-
-          img{
-            height: 2em;
-            margin-right: 0.5em;
-          }
-
-          strong{
-            font-size: 1.3em;
-          }
-
-          a {
-            display: flex;
-            align-items: center;
-            color: white;
-          }
-        }
-      }
-
-      .responsiveMenu{
-        display: none;
-      }
-
-      nav{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        order: 2;
-        width: 100%;
-      }
-
-      @media only screen and (max-width: 600px) {
-        .responsiveMenu{
-          display: inline-block;
-
-          &.close{
-            position: fixed;
-
-            color: black;
-            z-index: 1000;
-            top: 1em;
-            right: 1em;
-          }
-        }
-
-        nav{
-          display: none;
-          position: fixed;
-          height: 100vh;
-          top: 0;
-          left: 0;
-          width: 100%;
-          background-color: white;
-          padding-top: 3em;
-
-          &.active{
-            display: block;
-          }
-
-          ul{
-            flex-direction: column;
-            margin: 0;
-            align-items: flex-start;
-
-            li{
-              color: black;
-              padding: 0.7em 0;
-
-              a{
-                color: black;
-              }
-            }
-          }
-        }
-      }
-
-      ul {
-        list-style: none;
-        font-weight: normal;
-        order: 2;
-        display: flex;
-        align-items: center;
-
-        li {
-          float: left;
-          margin-left: 1em;
-
-          a {
-            color: white;
-
-            &:hover {
-              color: $primary-color-1;
-            }
-          }
-        }
-      }
-
-      .user {
-        order: 2;
-        margin-left: auto;
-
-
-        .button {
-          padding: 0.5em;
-          border: 2px solid $primary-color-1;
-          cursor: pointer;
-          color: $primary-color-1;
-
-          &:hover{
-            background-color: $primary-color-1;
-            color: white;
-          }
-        }
-      }
-    }
   }
 </style>

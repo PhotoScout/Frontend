@@ -1,22 +1,25 @@
 <template>
   <div id="app">
     <navbar></navbar>
-    <router-view/>
+    <router-view id="content"></router-view>
+    <footer-el></footer-el>
   </div>
 </template>
 
 <script>
 import navbar from './components/Navbar'
+import footer from './components/Footer'
 
 export default {
   name: 'app',
   components: {
-    navbar
+    navbar,
+    'footer-el': footer
   }
 }
 </script>
 
-<style lang="scss">
+<style>
 
 * {
   box-sizing: border-box;
@@ -36,6 +39,10 @@ a{
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin: 0;
-  color: #2c3e50;
+  color: #333;
+}
+
+#content{
+  min-height: 90vh;
 }
 </style>

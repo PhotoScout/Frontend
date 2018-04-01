@@ -5,7 +5,14 @@ import store from '../store'
 // Load the different pages
 import Index from '@/components/Index'
 import Travel from '@/components/Travel'
-import Guide from '@/components/Guide'
+
+import Guide from '@/components/Guide/Index'
+import GuideInfo from '@/components/Guide/Info'
+import GuidePhoto from '@/components/Guide/Photos'
+import GuideSearch from '@/components/Guide/Search'
+import GuideMap from '@/components/Guide/Map'
+
+import CreateGuide from '@/components/CreateGuide/Index'
 
 Vue.use(Router)
 
@@ -25,10 +32,39 @@ const router = new Router({
       }
     },
     {
+      path: '/guide/create',
+      component: CreateGuide,
+      name: 'CreateGuide'
+    },
+    {
       path: '/guide/:guideName',
-      name: 'Guide',
       component: Guide,
       props: true,
+      children: [
+        {
+          path: '',
+          name: 'Guide',
+          component: GuideInfo
+        },
+        {
+          path: 'photo',
+          name: 'GuidePhoto',
+          component: GuidePhoto,
+          props: true
+        },
+        {
+          path: 'search',
+          name: 'GuideSearch',
+          component: GuideSearch,
+          props: true
+        },
+        {
+          path: 'map',
+          name: 'GuideMap',
+          component: GuideMap,
+          props: true
+        }
+      ],
       meta: {
         requiresAuth: true
       }

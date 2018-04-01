@@ -5,6 +5,8 @@ import createPersistedState from 'vuex-persistedstate'
 // Store Modules
 import user from './modules/user'
 import guides from './modules/guides'
+import guideInfo from './modules/guideInfo'
+import newGuide from './modules/newGuide'
 
 Vue.use(Vuex)
 
@@ -16,7 +18,9 @@ export default new Vuex.Store({
   },
   modules: {
     user,
-    guides
+    guides,
+    guideInfo,
+    newGuide
   },
   plugins: [createPersistedState({
     key: 'surveying-marmot',
